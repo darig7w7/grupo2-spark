@@ -1,0 +1,55 @@
+name: grupo2-spark
+
+services:
+  spark-master:
+    image: apache/spark:3.5.5
+    container_name: grupo2-spark-master
+    user: root
+    command:
+      - /opt/spark/bin/spark-class
+      - org.apache.spark.deploy.master.Master
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    networks:
+      - spark-net
+
+  spark-worker:
+    image: apache/spark:3.5.5
+    container_name: grupo2-spark-worker
+    user: root
+    depends_on:
+      - spark-master
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+    command:
+      - /opt/spark/bin/spark-class
+      - org.apache.spark.deploy.worker.Worker
+      - spark://spark-master:7077
+    networks:
+      - spark-net
+
+  spark-job:
+    image: apache/spark:3.5.5
+    container_name: grupo2-spark-job
+    user: root
+    depends_on:
+      - spark-master
+      - spark-worker
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./output:/app/output
+    working_dir: /app
+    command:
+      - /opt/spark/bin/spark-submit
+      - --master
+      - spark://spark-master:7077
+      - src/transport_analytics.py
+    networks:
+      - spark-net
+
+networks:
+  spark-net:
+    name: grupo2-spark-net
