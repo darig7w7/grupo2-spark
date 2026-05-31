@@ -260,9 +260,3 @@ y streaming — Hadoop solo tiene MapReduce básico.
 Una partición es una porción del dataset que se procesa en un solo Executor.
 Si tienes 1000 viajes y 2 Executors — Spark crea particiones y las procesa en
 paralelo. El número óptimo de particiones es 2x el número de cores del cluster.
-
-## Autores
-
-Grupo 2 — Maestría en Ciencia de Datos  
-Curso: Ingeniería de Datos  
-2026
